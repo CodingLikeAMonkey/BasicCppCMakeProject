@@ -1,10 +1,17 @@
 cmake_minimum_required(VERSION 3.15)
 project(MyProject)
 
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Set output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Add Flecs submodule
+add_subdirectory(extern/flecs)
 
 # Static library
 add_library(static_lib STATIC src/static_lib/static_lib.cpp)
@@ -36,7 +43,12 @@ target_sources(header_only INTERFACE
 
 # Executable
 add_executable(main_app app/main.cpp)
-target_link_libraries(main_app static_lib dynamic_lib header_only)
+target_link_libraries(main_app 
+    static_lib 
+    dynamic_lib 
+    header_only
+    flecs  # Link against Flecs library
+)
 
 # Add headers to executable's project if needed
 target_sources(main_app PRIVATE 
